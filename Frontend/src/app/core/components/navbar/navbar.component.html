@@ -1,0 +1,18 @@
+<nav class="navbar">
+  <div class="header navbar__title">🪄 AImaginary Encounters</div>
+  <ul class="navbar__links">
+    <li class="link" routerLink="/dashboard">Dashboard</li>
+    <li class="link" routerLink="/">
+      <app-profile-pic [name]="'user'"></app-profile-pic>
+    </li>
+  </ul>
+</nav>
+
+<!--
+    TODO: implement user authentication
+    <div class="user-info">
+    <span class="username">{{
+      (_authService.user$ | async)?.username ?? "not logged in"
+    }}</span>
+    <span (click)="logout()" class="icon logout"> 🔓 </span>
+  </div> -->

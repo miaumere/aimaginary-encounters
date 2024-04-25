@@ -1,0 +1,15 @@
+<h3>Characters</h3>
+<p class="list-desc">
+  💡Create your imaginary characters and describe their personalities. With AI
+  magic, you can chat with them!
+</p>
+<div class="characters">
+  @for (character of characters; track character.id) {
+  <app-character-card [character]="character"></app-character-card>
+  } @empty {
+  <p class="empty-list">
+    There are no characters. Click "+" button in order to create new character.
+  </p>
+  }
+  <div class="icon" [title]="'Create character'" [routerLink]="''">➕</div>
+</div>

@@ -1,13 +1,24 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
+import { Component, OnInit } from '@angular/core';
+import { LoaderService } from './core/services/loader.service';
+import { BaseComponent } from './core/base.component';
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'frontend';
+export class AppComponent extends BaseComponent implements OnInit {
+  title = 'AImaginatory Encounters 🪄';
+  globalLoaderIsVisible = false;
+
+  constructor(private _loaderService: LoaderService) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.subscriptions$.add(
+      this._loaderService.isLoaderVisible.subscribe((isVisible) => {
+        this.globalLoaderIsVisible = isVisible;
+      })
+    );
+  }
 }

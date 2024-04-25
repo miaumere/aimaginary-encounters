@@ -1,0 +1,13 @@
+@if(image) {
+<img
+  [ngStyle]="{ height: size, width: size }"
+  class="profile-pic"
+  [src]="image"
+/>
+} @else {
+<img
+  [ngStyle]="{ height: size, width: size }"
+  class="profile-pic"
+  [src]="'https://ui-avatars.com/api/?name=' + name"
+/>
+}
