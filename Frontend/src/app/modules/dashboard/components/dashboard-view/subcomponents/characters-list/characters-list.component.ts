@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { ICharacterDto } from '../../../../../../core/services/models/character-in-chat.model';
+import { Component, OnInit } from '@angular/core';
+import { ICharacterDto } from '../../../../../../core/services/models/character-dto.model';
+import { BaseComponent } from '../../../../../../core/base.component';
+import { CharactersService } from '../../../../../../core/services/characters.service';
 
 @Component({
   selector: 'app-characters-list',
@@ -9,23 +11,22 @@ import { ICharacterDto } from '../../../../../../core/services/models/character-
     './characters-list.component.scss',
   ],
 })
-export class CharactersListComponent {
-  characters: ICharacterDto[] = [
-    {
-      id: '1',
-      name: 'Character 1',
-      imageUrl: 'https://via.placeholder.com/150',
-    },
-    {
-      id: '2',
-      name: 'Character 2',
-      imageUrl: 'https://via.placeholder.com/150',
-    },
-    {
-      id: '3',
-      name: 'Character 3',
-      imageUrl: 'https://via.placeholder.com/150',
-    },
-  ];
-  constructor() {}
+export class CharactersListComponent extends BaseComponent implements OnInit {
+  characters: ICharacterDto[] = [];
+
+  constructor(private _charactersService: CharactersService) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this._getCharacters();
+  }
+
+  private _getCharacters() {
+    this.subscriptions$.add(
+      this._charactersService.getCharacters().subscribe((characters) => {
+        this.characters = characters;
+      })
+    );
+  }
 }

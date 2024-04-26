@@ -1,0 +1,108 @@
+@import "variables.scss";
+
+.edit-character-details {
+  background: $white;
+  border-radius: 10px;
+  padding: 16px;
+  @include boxShadow;
+}
+
+.edit-image-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  &:hover {
+    .edit-image {
+      opacity: 1;
+    }
+  }
+}
+
+.edit-image {
+  position: absolute;
+  cursor: pointer;
+  transition: 0.3s;
+  opacity: 0;
+
+  font-size: 12px;
+
+  height: 100px;
+  width: 100px;
+  text-align: center;
+
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $white;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &__first-section {
+    display: flex;
+    align-items: start;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__second-section {
+    display: flex;
+    align-items: start;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__colors {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+  }
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 30rem;
+}
+
+.form-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 8px;
+  width: 100%;
+  font-size: 12px;
+
+  &__textarea {
+    resize: vertical;
+    max-height: 150px;
+    min-height: 100px;
+  }
+}
+
+.color-box {
+  height: 32px;
+  width: 32px;
+  border-radius: 8px;
+  background: $red;
+  cursor: pointer;
+  transition: 0.3s transform;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &--selected {
+    border: 2px dashed $black;
+  }
+}

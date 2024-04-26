@@ -8,7 +8,7 @@ import { animations } from '../../animations';
   animations: [animations.loading],
 })
 export class LoaderComponent implements OnInit {
-  @Input() visible = false;
+  @Input() visible: boolean | null = false;
   @Input() fullScreen = false;
 
   constructor() {}

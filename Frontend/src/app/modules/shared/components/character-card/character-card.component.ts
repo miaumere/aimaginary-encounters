@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ICharacterDto } from '../../../../core/services/models/character-in-chat.model';
+import { ICharacterDto } from '../../../../core/services/models/character-dto.model';
 
 @Component({
   selector: 'app-character-card [character]',
@@ -10,6 +10,6 @@ export class CharacterCardComponent {
   @Input() character: ICharacterDto = {
     id: '',
     name: 'Character 1',
-    imageUrl: 'https://via.placeholder.com/150',
+    image: 'https://via.placeholder.com/150',
   };
 }

@@ -26,9 +26,13 @@ body {
 }
 
 button {
+  cursor: pointer;
+  margin-top: 8px;
+
   &[disabled] {
     color: grey;
     pointer-events: none;
+    opacity: 0.5;
   }
 }
 
@@ -50,7 +54,16 @@ h5 {
 h6 {
   font-size: 1rem;
 }
-p {
+p,
+label,
+input,
+button,
+a,
+span,
+div,
+li,
+td,
+th {
   font-size: 1rem;
 }
 
@@ -68,4 +81,22 @@ p {
 
 .empty-list {
   color: $grey;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid $grey;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+}
+
+.error {
+  border: 1px solid $red;
+  border-radius: 2px;
+}
+
+.error-message {
+  color: $red;
+  font-size: 10px;
 }

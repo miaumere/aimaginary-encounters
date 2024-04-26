@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { LoaderService } from './core/services/loader.service';
 import { BaseComponent } from './core/base.component';
 @Component({
@@ -7,10 +7,12 @@ import { BaseComponent } from './core/base.component';
   styleUrl: './app.component.scss',
 })
 export class AppComponent extends BaseComponent implements OnInit {
-  title = 'AImaginatory Encounters 🪄';
   globalLoaderIsVisible = false;
 
-  constructor(private _loaderService: LoaderService) {
+  constructor(
+    private _loaderService: LoaderService,
+    private cdr: ChangeDetectorRef
+  ) {
     super();
   }
 
@@ -18,6 +20,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     this.subscriptions$.add(
       this._loaderService.isLoaderVisible.subscribe((isVisible) => {
         this.globalLoaderIsVisible = isVisible;
+        this.cdr.detectChanges();
       })
     );
   }

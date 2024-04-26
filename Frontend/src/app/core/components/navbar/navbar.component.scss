@@ -1,7 +1,5 @@
 @import "variables";
 
-$box-shadow-color: rgba(191, 194, 224, 0.5);
-
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -21,6 +19,12 @@ $box-shadow-color: rgba(191, 194, 224, 0.5);
     list-style-type: none;
     display: flex;
     gap: 16px;
+    transition: 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      color: $accent-color;
+    }
   }
 }
 

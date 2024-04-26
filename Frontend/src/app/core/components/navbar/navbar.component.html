@@ -1,7 +1,7 @@
 <nav class="navbar">
   <div class="header navbar__title">🪄 AImaginary Encounters</div>
   <ul class="navbar__links">
-    <li class="link" routerLink="/dashboard">Dashboard</li>
+    <li class="link" [routerLink]="['/dashboard']">Dashboard</li>
     <li class="link" routerLink="/">
       <app-profile-pic [name]="'user'"></app-profile-pic>
     </li>
