@@ -15,7 +15,7 @@ const routes: Routes = [
         component: EditCharacterDetailsComponent,
       },
       {
-        path: ':id/edit-character',
+        path: ':id',
         component: EditCharacterDetailsComponent,
       },
     ],

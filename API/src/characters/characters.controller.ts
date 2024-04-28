@@ -1,19 +1,43 @@
-import { Get, Controller } from '@nestjs/common';
+import {
+	Get,
+	Controller,
+	Delete,
+	Param,
+	Post,
+	UseInterceptors,
+	UploadedFile,
+	Body,
+} from '@nestjs/common';
 import { CharactersService } from './characters.service';
-
-// import { TagEntity } from './tag.entity';
-// import { TagService } from './tag.service';
-
-// import {
-//   ApiBearerAuth, ApiTags,
-// } from '@nestjs/swagger';
+import { ICharacterDto } from 'src/models/character-dto.model';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ICharacterRequestDto } from 'src/models/character-request-dto.model';
 
 @Controller('api/characters')
-export class TagController {
+export class CharactersController {
 	constructor(private readonly _charactersService: CharactersService) {}
 
 	@Get()
-	async findAll(): Promise<TagEntity[]> {
-		return await this._charactersService.findAll();
+	async getCharacterList(): Promise<ICharacterDto[]> {
+		return await this._charactersService.getCharacterList();
+	}
+
+	@Get(':id')
+	async getCharacter(@Param('id') id: string): Promise<ICharacterDto> {
+		return await this._charactersService.getCharacter(id);
+	}
+
+	@Post()
+	@UseInterceptors(FileInterceptor('image'))
+	async upserCharacter(
+		@Body() body: ICharacterRequestDto,
+		@UploadedFile() file: Express.Multer.File
+	) {
+		return await this._charactersService.upsertCharacter(body, file);
+	}
+
+	@Delete(':id')
+	remove(@Param('id') id: string) {
+		return this._charactersService.deleteCharacter(id);
 	}
 }

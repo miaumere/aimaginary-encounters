@@ -34,6 +34,10 @@
 .character-card-name {
   font-size: 12px;
   font-weight: 500;
+  width: 100px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .action {

@@ -2,14 +2,26 @@
   <div class="character-card__header">
     <img
       class="character-card-avatar"
-      src="https://via.placeholder.com/150"
+      [src]="character.image"
       alt="Character Avatar"
     />
-    <h4 class="character-card-name">Lorem ipsum</h4>
+    <h4 class="character-card-name">{{ character.name }}</h4>
   </div>
   <div class="character-card__actions">
-    <div class="action icon" [title]="'Delete character'">❌</div>
-    <div class="action icon" [title]="'Edit character'">✏️</div>
+    <div
+      class="action icon"
+      [title]="'Delete character'"
+      (click)="deleteCharacter()"
+    >
+      ❌
+    </div>
+    <div
+      class="action icon"
+      [title]="'Edit character'"
+      [routerLink]="[character.id]"
+    >
+      ✏️
+    </div>
     <div class="action icon" [title]="'Chat!'">💬</div>
   </div>
 </div>

@@ -29,4 +29,8 @@ export class CharactersListComponent extends BaseComponent implements OnInit {
       })
     );
   }
+
+  charactersChanged() {
+    this._getCharacters();
+  }
 }

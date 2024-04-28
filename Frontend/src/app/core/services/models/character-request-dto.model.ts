@@ -1,6 +1,8 @@
 export interface ICharacterRequestDto {
+  id?: string;
   name: string;
   age: string;
+  gender?: string;
   backstory: string;
   positiveTraits: string;
   negativeTraits: string;

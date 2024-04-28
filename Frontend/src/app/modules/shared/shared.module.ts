@@ -4,6 +4,7 @@ import { LoaderComponent } from './components/loader/loader.component';
 import { ProfilePicComponent } from './components/profile-pic/profile-pic.component';
 import { CharacterCardComponent } from './components/character-card/character-card.component';
 import { ErrorDisplayDirective } from './directives/error.directive';
+import { RouterModule } from '@angular/router';
 
 const shared = [
   LoaderComponent,
@@ -13,7 +14,7 @@ const shared = [
 ];
 @NgModule({
   declarations: [...shared],
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   exports: [...shared],
 })
 export class SharedModule {}

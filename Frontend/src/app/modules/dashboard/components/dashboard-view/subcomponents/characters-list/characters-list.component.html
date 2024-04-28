@@ -5,7 +5,10 @@
 </p>
 <div class="characters">
   @for (character of characters; track character.id) {
-  <app-character-card [character]="character"></app-character-card>
+  <app-character-card
+    [character]="character"
+    (changed)="charactersChanged()"
+  ></app-character-card>
   } @empty {
   <p class="empty-list">
     There are no characters. Click "+" button in order to create new character.

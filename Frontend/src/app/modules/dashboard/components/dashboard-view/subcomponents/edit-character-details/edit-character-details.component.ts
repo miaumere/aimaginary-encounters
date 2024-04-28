@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from '../../../../../../core/base.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { colors } from '../../../../../shared/colors';
 import { CharactersService } from '../../../../../../core/services/characters.service';
 import { ICharacterRequestDto } from '../../../../../../core/services/models/character-request-dto.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-character-details',
@@ -27,7 +28,8 @@ export class EditCharacterDetailsComponent
       Validators.minLength(3),
       Validators.maxLength(50),
     ]),
-    age: new FormControl('', [Validators.required, Validators.maxLength(3)]),
+    age: new FormControl('', [Validators.maxLength(50)]),
+    gender: new FormControl('', [Validators.maxLength(50)]),
     backstory: new FormControl('', [
       Validators.required,
       Validators.minLength(10),
@@ -43,14 +45,39 @@ export class EditCharacterDetailsComponent
 
   constructor(
     private _route: ActivatedRoute,
-    private _charactersService: CharactersService
+    private _charactersService: CharactersService,
+    private _router: Router,
+    private _toastrService: ToastrService
   ) {
     super();
     this.characterId = this._route.snapshot.params['id'];
     this.editMode = !!this.characterId;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.editMode) {
+      this._getCharacter();
+    }
+  }
+
+  private _getCharacter(): void {
+    this.subscriptions$.add(
+      this._charactersService
+        .getCharacter(this.characterId)
+        .subscribe((character) => {
+          this.form.patchValue({
+            name: character.name,
+            age: character.age,
+            backstory: character.backstory,
+            positiveTraits: character.positiveTraits,
+            negativeTraits: character.negativeTraits,
+            skills: character.skills,
+          });
+          this.chosenColor = character.color;
+          this.imagePreview = character.image;
+        })
+    );
+  }
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
@@ -73,7 +100,9 @@ export class EditCharacterDetailsComponent
     }
 
     const request: ICharacterRequestDto = {
+      id: this.characterId ?? '',
       name: this.form.value.name ?? '',
+      gender: this.form.value.gender ?? '',
       age: this.form.value.age ?? '',
       backstory: this.form.value.backstory ?? '',
       positiveTraits: this.form.value.positiveTraits ?? '',
@@ -83,14 +112,16 @@ export class EditCharacterDetailsComponent
       image: this.selectedFile as File,
     };
 
-    console.log('Request:', request);
-
     this.subscriptions$.add(
-      this._charactersService
-        .upsertCharacter(request)
-        .subscribe((character) => {
-          console.log('character: ', character);
-        })
+      this._charactersService.upsertCharacter(request).subscribe(() => {
+        this._toastrService.success('🎉 Success!');
+
+        if (this.editMode) {
+          this._getCharacter();
+        } else {
+          this._router.navigate(['/dashboard']);
+        }
+      })
     );
   }
 }

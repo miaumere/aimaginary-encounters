@@ -29,9 +29,15 @@
           </label>
 
           <label class="form-label">
-            Age (in years)
-            <input type="number" formControlName="age" appErrorDisplay />
+            Gender
+            <input type="text" formControlName="gender" appErrorDisplay />
           </label>
+
+          <label class="form-label">
+            Age (in years)
+            <input type="text" formControlName="age" appErrorDisplay />
+          </label>
+
           <label class="form-label">
             Description
             <textarea
@@ -55,7 +61,7 @@
         <label class="form-label">
           Adjectives that describe negative aspects of the character's
           personality (e.g. arrogant, cowardly, dishonest)
-          <input type="text" formControlName="positiveTraits" appErrorDisplay />
+          <input type="text" formControlName="negativeTraits" appErrorDisplay />
         </label>
 
         <label class="form-label">
