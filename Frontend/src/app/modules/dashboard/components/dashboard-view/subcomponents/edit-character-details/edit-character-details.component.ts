@@ -68,6 +68,7 @@ export class EditCharacterDetailsComponent
           this.form.patchValue({
             name: character.name,
             age: character.age,
+            gender: character.gender,
             backstory: character.backstory,
             positiveTraits: character.positiveTraits,
             negativeTraits: character.negativeTraits,

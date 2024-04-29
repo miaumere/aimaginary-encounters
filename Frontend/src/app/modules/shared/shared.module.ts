@@ -5,12 +5,14 @@ import { ProfilePicComponent } from './components/profile-pic/profile-pic.compon
 import { CharacterCardComponent } from './components/character-card/character-card.component';
 import { ErrorDisplayDirective } from './directives/error.directive';
 import { RouterModule } from '@angular/router';
+import { ChatCardComponent } from './components/chat-card/chat-card.component';
 
 const shared = [
   LoaderComponent,
   ProfilePicComponent,
   CharacterCardComponent,
   ErrorDisplayDirective,
+  ChatCardComponent,
 ];
 @NgModule({
   declarations: [...shared],

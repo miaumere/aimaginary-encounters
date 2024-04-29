@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CharactersModule } from './characters/characters.module';
 import { ConfigModule } from '@nestjs/config';
+import { ChatModule } from './chat/chat.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -23,6 +24,7 @@ const ENV = process.env.NODE_ENV;
 			synchronize: true,
 		}),
 		CharactersModule,
+		ChatModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

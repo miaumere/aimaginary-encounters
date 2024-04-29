@@ -1,0 +1,108 @@
+<div class="edit-chat-details">
+  <h3>{{ editMode ? "Edit chat" : "Create chat" }}</h3>
+  <div>
+    <form [formGroup]="form" class="form">
+      <h4>Chat properties</h4>
+      <div class="form-section">
+        <label class="form-label">
+          Chat name (will be displayed in dashboard)
+          <input type="text" formControlName="name" appErrorDisplay />
+        </label>
+
+        <label class="form-label">
+          Additional context (e.g. "Characters discuss the upcoming battle")
+          <textarea
+            formControlName="additionalContext"
+            class="form-label__textarea"
+            appErrorDisplay
+          ></textarea>
+        </label>
+
+        <h4>Participants</h4>
+        <label class="form-label">Participant 1 </label>
+        <div>
+          <ng-autocomplete
+            formControlName="character1"
+            appErrorDisplay
+            [data]="characters"
+            [searchKeyword]="'name'"
+            placeholder="Select character..."
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate"
+          >
+          </ng-autocomplete>
+        </div>
+
+        <label class="form-label">Participant 1 attitude</label>
+        <div class="attitude-list">
+          @for (attitude of attitudes; track attitude) {
+          <div
+            class="attitude-list__item"
+            [ngClass]="{
+              'attitude-list__item--selected': character1Attitude === attitude
+            }"
+            (click)="character1Attitude = attitude"
+          >
+            {{ attitudeLabels[attitude] }}
+          </div>
+          }
+        </div>
+        <hr />
+        <label class="form-label">Participant 2 </label>
+        <label class="form-label form-label__checkbox">
+          <input type="checkbox" formControlName="isCharacter2CurrentUser" />
+          chat with me (instead of a character)
+        </label>
+
+        <div>
+          <ng-autocomplete
+            [ngClass]="{ disabled: form.value.isCharacter2CurrentUser }"
+            formControlName="character2"
+            [data]="characters"
+            [searchKeyword]="'name'"
+            appErrorDisplay
+            placeholder="Select character..."
+            [itemTemplate]="itemTemplate"
+            [notFoundTemplate]="notFoundTemplate"
+          >
+          </ng-autocomplete>
+        </div>
+        <label
+          class="form-label"
+          [ngClass]="{ disabled: form.value.isCharacter2CurrentUser }"
+          >Participant 2 attitude</label
+        >
+        <div
+          class="attitude-list"
+          [ngClass]="{ disabled: form.value.isCharacter2CurrentUser }"
+        >
+          @for (attitude of attitudes; track attitude) {
+          <div
+            class="attitude-list__item"
+            [ngClass]="{
+              'attitude-list__item--selected': character2Attitude === attitude
+            }"
+            (click)="character2Attitude = attitude"
+          >
+            {{ attitudeLabels[attitude] }}
+          </div>
+          }
+        </div>
+      </div>
+      <button [disabled]="!form.valid" (click)="saveChanges()">
+        💾 Save changes
+      </button>
+    </form>
+  </div>
+</div>
+
+<ng-template #itemTemplate let-item>
+  <div class="character-info">
+    <app-profile-pic [image]="item.image" [name]="item.name"></app-profile-pic>
+    <div [innerHTML]="item.name"></div>
+  </div>
+</ng-template>
+
+<ng-template #notFoundTemplate let-notFound>
+  <div [innerHTML]="notFound"></div>
+</ng-template>

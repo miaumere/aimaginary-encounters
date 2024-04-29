@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardIndexComponent } from './dashboard-index.component';
 import { DashboardViewComponent } from './components/dashboard-view/dashboard-view.component';
 import { EditCharacterDetailsComponent } from './components/dashboard-view/subcomponents/edit-character-details/edit-character-details.component';
+import { EditChatDetailsComponent } from './components/dashboard-view/subcomponents/edit-chat-details/edit-chat-details.component';
 
 const routes: Routes = [
   {
@@ -15,8 +16,16 @@ const routes: Routes = [
         component: EditCharacterDetailsComponent,
       },
       {
-        path: ':id',
+        path: 'edit-character/:id',
         component: EditCharacterDetailsComponent,
+      },
+      {
+        path: 'create-chat',
+        component: EditChatDetailsComponent,
+      },
+      {
+        path: 'edit-chat/:id',
+        component: EditChatDetailsComponent,
       },
     ],
   },

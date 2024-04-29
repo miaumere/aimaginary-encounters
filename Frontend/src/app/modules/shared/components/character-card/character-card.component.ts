@@ -22,16 +22,18 @@ export class CharacterCardComponent extends BaseComponent {
   }
 
   deleteCharacter() {
-    confirm(
+    const decision = confirm(
       'Are you sure you want to delete this character? All associated chats and messages will be deleted as well.'
     );
 
-    this.subscriptions$.add(
-      this._charactersService
-        .deleteCharacter(this.character.id)
-        .subscribe(() => {
-          this.changed.emit();
-        })
-    );
+    if (decision) {
+      this.subscriptions$.add(
+        this._charactersService
+          .deleteCharacter(this.character.id)
+          .subscribe(() => {
+            this.changed.emit();
+          })
+      );
+    }
   }
 }

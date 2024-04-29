@@ -1,10 +1,12 @@
+@import "variables.scss";
+
 .profile-pic {
   border-radius: 50%;
 
   &__image {
     width: 100px;
     height: 100px;
-    border-radius: 50%;
+    border-radius: $avatar-border-radius;
     object-fit: cover;
   }
 }

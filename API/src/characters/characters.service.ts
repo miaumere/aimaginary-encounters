@@ -51,6 +51,7 @@ export class CharactersService {
 
 		characterEntity.name = character.name;
 		characterEntity.age = character.age;
+		characterEntity.gender = character.gender;
 		characterEntity.backstory = character.backstory;
 		characterEntity.positiveTraits = character.positiveTraits;
 		characterEntity.negativeTraits = character.negativeTraits;

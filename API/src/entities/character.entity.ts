@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+	Entity,
+	PrimaryGeneratedColumn,
+	Column,
+	OneToMany,
+	JoinColumn,
+} from 'typeorm';
+import { ChatEntity } from './chat.entity';
 
 @Entity('character')
 export class CharacterEntity {
@@ -31,4 +38,17 @@ export class CharacterEntity {
 
 	@Column({ length: 8 })
 	color: string;
+
+	@OneToMany(() => ChatEntity, (chat) => chat.character1)
+	chatUser1: CharacterEntity;
+
+	@OneToMany(() => ChatEntity, (chat) => chat.character2)
+	chatUser2: CharacterEntity;
+
+	@Column()
+	createdAt: Date = new Date();
+
+	// TODO: auth
+	// @Column()
+	// createdBy: string;
 }

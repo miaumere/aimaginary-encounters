@@ -1,5 +1,5 @@
 import { CharacterEntity } from './../entities/character.entity';
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module, NestModule } from '@nestjs/common';
 import { CharactersService } from './characters.service';
 import { CharactersController } from './characters.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';

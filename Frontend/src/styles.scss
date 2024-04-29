@@ -28,12 +28,13 @@ body {
 button {
   cursor: pointer;
   margin-top: 8px;
+}
 
-  &[disabled] {
-    color: grey;
-    pointer-events: none;
-    opacity: 0.5;
-  }
+.disabled,
+button[disabled] {
+  color: grey;
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 h1 {
@@ -89,11 +90,6 @@ hr {
   width: 80%;
   display: flex;
   justify-content: center;
-}
-
-.error {
-  border: 1px solid $red;
-  border-radius: 2px;
 }
 
 .error-message {

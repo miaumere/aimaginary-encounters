@@ -35,7 +35,11 @@ export class Interceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         console.log(error);
         this._toastrService.error(
-          error.status !== 500 ? error.error : '',
+          error.status !== 500
+            ? error.message
+              ? error.message
+              : '⚠️ An error has occured!'
+            : '',
           '⚠️ An error has occured!'
         );
 

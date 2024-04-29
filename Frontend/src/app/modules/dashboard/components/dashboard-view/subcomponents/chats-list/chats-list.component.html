@@ -1,0 +1,21 @@
+<h3>Chats</h3>
+<p class="list-desc">
+  💡Create conversations with characters you've created. Also, you can create
+  chats between two characters from above.
+</p>
+
+<div class="chats">
+  @for (chat of chats; track chat.id) {
+
+  <div class="chat" [routerLink]="['./chat', chat.id]">
+    <app-chat-card [chat]="chat" (changed)="chatListChanged()"></app-chat-card>
+  </div>
+  } @empty {
+  <p class="empty-list">
+    There are no chats. Click "+" button in order to create new chat.
+  </p>
+  }
+  <div class="icon" [title]="'Create chat'" [routerLink]="['./create-chat']">
+    ➕
+  </div>
+</div>

@@ -1,6 +1,6 @@
 @import "variables.scss";
 
-.character-card {
+.chat-card {
   display: flex;
   padding: 1rem;
   position: relative;
@@ -25,13 +25,13 @@
   }
 }
 
-.character-card-avatar {
+.chat-card-avatar {
   width: 80px;
   height: 80px;
-  border-radius: $avatar-border-radius;
+  border-radius: 50%;
 }
 
-.character-card-name {
+.chat-card-name {
   font-size: 12px;
   font-weight: 500;
   width: 100px;
@@ -42,4 +42,12 @@
 
 .action {
   font-size: 10px;
+}
+
+.participants {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100px;
+  gap: 4px;
+  align-items: baseline;
 }

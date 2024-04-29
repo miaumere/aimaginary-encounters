@@ -1,0 +1,74 @@
+@import "variables.scss";
+
+.edit-chat-details {
+  background: $white;
+  border-radius: 10px;
+  padding: 16px;
+  @include boxShadow;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 30rem;
+}
+
+.form-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 8px;
+  width: 100%;
+  font-size: 12px;
+  &__textarea {
+    resize: vertical;
+    max-height: 150px;
+    min-height: 100px;
+  }
+
+  &__checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+  }
+}
+
+.character-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.attitude-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: $secondary-color;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.3s transform;
+
+    &--selected {
+      border: 2px dashed $black;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}

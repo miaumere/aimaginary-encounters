@@ -50,7 +50,6 @@ export class ErrorDisplayDirective implements OnInit, OnDestroy {
 
       let errorMessage = errors.length ? control.errors[errors[0]] : null;
 
-      console.log('errors', errors);
       if (errors.includes('minlength')) {
         const minLength = control.errors?.['minlength'];
         errorMessage = `This field must be at least ${minLength.requiredLength} characters long`;
