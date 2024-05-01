@@ -4,6 +4,8 @@
   background: $white;
   border-radius: 10px;
   padding: 16px;
+  margin: 16px;
+
   @include boxShadow;
 }
 
@@ -34,7 +36,7 @@
   text-align: center;
 
   background: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
+  border-radius: $avatar-border-radius;
   display: flex;
   align-items: center;
   justify-content: center;

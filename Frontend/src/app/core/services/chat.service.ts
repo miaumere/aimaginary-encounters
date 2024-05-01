@@ -3,7 +3,11 @@ import { Injectable } from '@angular/core';
 import { ICharacterDetails, ICharacterDto } from './models/character-dto.model';
 import { ICharacterRequestDto } from './models/character-request-dto.model';
 import { Observable } from 'rxjs';
-import { IChatDetailsDto, IChatDto } from './models/chat-dto.model';
+import {
+  IChatDetailsDto,
+  IChatDto,
+  IMessageDto,
+} from './models/chat-dto.model';
 import { IChatRequestDto } from './models/chat-request.model';
 
 @Injectable({
@@ -28,5 +32,16 @@ export class ChatService {
 
   deleteChat(id: string) {
     return this.http.delete(`${this._baseUrl}/${id}`);
+  }
+
+  getChatMessages(id: string) {
+    return this.http.get<IMessageDto[]>(`${this._baseUrl}/messages/${id}`);
+  }
+
+  generateMessages(chatId: string) {
+    return this.http.post<IMessageDto[]>(
+      `${this._baseUrl}/messages/${chatId}`,
+      {}
+    );
   }
 }

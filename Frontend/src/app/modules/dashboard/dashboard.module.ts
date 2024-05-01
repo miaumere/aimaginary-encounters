@@ -10,6 +10,7 @@ import { EditCharacterDetailsComponent } from './components/dashboard-view/subco
 import { ChatsListComponent } from './components/dashboard-view/subcomponents/chats-list/chats-list.component';
 import { EditChatDetailsComponent } from './components/dashboard-view/subcomponents/edit-chat-details/edit-chat-details.component';
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
+import { ChatComponent } from './components/dashboard-view/subcomponents/chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { AutocompleteLibModule } from 'angular-ng-autocomplete';
     EditCharacterDetailsComponent,
     ChatsListComponent,
     EditChatDetailsComponent,
+    ChatComponent,
   ],
   imports: [
     CommonModule,

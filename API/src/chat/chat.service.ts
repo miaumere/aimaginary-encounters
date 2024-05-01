@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CharacterEntity } from 'src/entities/character.entity';
 import { ChatEntity } from 'src/entities/chat.entity';
+import { MessageEntity } from 'src/entities/message.entity';
 import { Attitude } from 'src/enums/attitude.enum';
 import { IChatDetailsDto, IChatDto } from 'src/models/chat-dto.model';
 import { IChatRequestDto } from 'src/models/chat-request.model';
+import { AiHelperService } from 'src/shared/ai-helper.service';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -13,7 +15,10 @@ export class ChatService {
 		@InjectRepository(ChatEntity)
 		private readonly _chatRepository: Repository<ChatEntity>,
 		@InjectRepository(CharacterEntity)
-		private readonly _charactersRepository: Repository<CharacterEntity>
+		private readonly _charactersRepository: Repository<CharacterEntity>,
+		@InjectRepository(MessageEntity)
+		private readonly _messagesRepository: Repository<MessageEntity>,
+		private readonly _aiHelperService: AiHelperService
 	) {}
 
 	async getChats() {
@@ -117,5 +122,79 @@ export class ChatService {
 
 	async deleteChat(id: string) {
 		return await this._chatRepository.delete(id);
+	}
+
+	async getChatMessages(id: string) {
+		const chat = await this._chatRepository.findOne({
+			relations: ['messages', 'messages.author'],
+			where: {
+				id,
+			},
+		});
+
+		if (!chat) {
+			throw new Error('Chat not found');
+		}
+		const messages = chat.messages;
+
+		const result = messages
+			.map((message) => {
+				return {
+					id: message.id,
+					sender: {
+						id: message.author.id,
+						name: message.author.name,
+						image: message.author.image,
+						color: message.author.color,
+					},
+					content: message.content,
+					sentDate: message.sentDate,
+				};
+			})
+			.sort((a, b) => a.sentDate.getTime() - b.sentDate.getTime());
+
+		return result;
+	}
+
+	async generateMessages(chatId: string) {
+		const chat = await this._chatRepository.findOne({
+			relations: [
+				'messages',
+				'character1',
+				'character2',
+				'messages.author',
+			],
+			where: {
+				id: chatId,
+			},
+		});
+
+		const lastMessage = chat?.messages[chat.messages.length - 1];
+
+		if (!chat) {
+			throw new Error('Chat not found');
+		}
+
+		const message = new MessageEntity();
+
+		const character =
+			lastMessage?.author.id === chat.character1.id
+				? chat.character2
+				: chat.character1;
+
+		message.content = await this._aiHelperService.getAiResponse(
+			character,
+			chat,
+			chat.character1.id
+				? chat.character2Attitude
+				: chat.character1Attitude
+		);
+
+		message.sentDate = new Date();
+		message.author = character;
+
+		await this._messagesRepository.save(message);
+		chat.messages.push(message);
+		await this._chatRepository.save(chat);
 	}
 }

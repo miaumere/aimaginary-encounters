@@ -4,6 +4,7 @@ import { DashboardIndexComponent } from './dashboard-index.component';
 import { DashboardViewComponent } from './components/dashboard-view/dashboard-view.component';
 import { EditCharacterDetailsComponent } from './components/dashboard-view/subcomponents/edit-character-details/edit-character-details.component';
 import { EditChatDetailsComponent } from './components/dashboard-view/subcomponents/edit-chat-details/edit-chat-details.component';
+import { ChatComponent } from './components/dashboard-view/subcomponents/chat/chat.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
       {
         path: 'edit-chat/:id',
         component: EditChatDetailsComponent,
+      },
+      {
+        path: 'chat/:id',
+        component: ChatComponent,
       },
     ],
   },

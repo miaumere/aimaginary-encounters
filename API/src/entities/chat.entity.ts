@@ -1,6 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+	Column,
+	Entity,
+	ManyToOne,
+	OneToMany,
+	PrimaryGeneratedColumn,
+} from 'typeorm';
 import { CharacterEntity } from './character.entity';
 import { Attitude } from 'src/enums/attitude.enum';
+import { MessageEntity } from './message.entity';
 
 @Entity('chat')
 export class ChatEntity {
@@ -43,4 +50,7 @@ export class ChatEntity {
 	// TODO: auth
 	// @Column()
 	// createdBy: string;
+
+	@OneToMany(() => MessageEntity, (msg) => msg.chat)
+	messages: MessageEntity[];
 }

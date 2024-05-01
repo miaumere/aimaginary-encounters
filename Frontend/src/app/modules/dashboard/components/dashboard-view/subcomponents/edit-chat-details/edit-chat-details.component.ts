@@ -114,12 +114,12 @@ export class EditChatDetailsComponent extends BaseComponent implements OnInit {
       name: this.form.value.name ?? '',
       additionalContext: this.form.value.additionalContext ?? null,
       character1Id: character1.id,
-      isCharacter2CurrentUser: isCharacter2CurrentUser,
-      character2Id: isCharacter2CurrentUser ? null : character2.id,
       character1Attitude: this.character1Attitude as unknown as Attitude,
+      character2Id: isCharacter2CurrentUser ? null : character2.id,
       character2Attitude: isCharacter2CurrentUser
         ? null
         : (this.character2Attitude as unknown as Attitude),
+      isCharacter2CurrentUser: isCharacter2CurrentUser,
     };
 
     this.subscriptions$.add(

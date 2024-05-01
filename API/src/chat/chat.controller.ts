@@ -35,4 +35,14 @@ export class ChatController {
 	deleteChat(@Param('id') id: string) {
 		return this._chatService.deleteChat(id);
 	}
+
+	@Get('messages/:id')
+	async getChatMessages(@Param('id') id: string) {
+		return await this._chatService.getChatMessages(id);
+	}
+
+	@Post('messages/:chatId')
+	async generateMessages(@Param('chatId') id: string) {
+		return await this._chatService.generateMessages(id);
+	}
 }

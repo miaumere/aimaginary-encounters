@@ -6,6 +6,7 @@ import {
 	JoinColumn,
 } from 'typeorm';
 import { ChatEntity } from './chat.entity';
+import { MessageEntity } from './message.entity';
 
 @Entity('character')
 export class CharacterEntity {
@@ -39,16 +40,19 @@ export class CharacterEntity {
 	@Column({ length: 8 })
 	color: string;
 
-	@OneToMany(() => ChatEntity, (chat) => chat.character1)
-	chatUser1: CharacterEntity;
-
-	@OneToMany(() => ChatEntity, (chat) => chat.character2)
-	chatUser2: CharacterEntity;
-
 	@Column()
 	createdAt: Date = new Date();
 
 	// TODO: auth
 	// @Column()
 	// createdBy: string;
+
+	@OneToMany(() => ChatEntity, (chat) => chat.character1)
+	chatUser1: CharacterEntity;
+
+	@OneToMany(() => ChatEntity, (chat) => chat.character2)
+	chatUser2: CharacterEntity;
+
+	@OneToMany(() => MessageEntity, (msg) => msg.author)
+	characterMessages: CharacterEntity;
 }

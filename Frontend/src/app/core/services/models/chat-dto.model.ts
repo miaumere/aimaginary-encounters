@@ -1,5 +1,5 @@
 import { Attitude } from '../enums/attitude.enum';
-import { ICharacterDto } from './character-dto.model';
+import { ICharacterDto, ICharacterWithColorDto } from './character-dto.model';
 
 export interface IChatDto {
   id: string;
@@ -17,4 +17,11 @@ export interface IChatDetailsDto {
   character1Attitude: Attitude;
   character2Attitude: Attitude | null;
   isCharacter2CurrentUser: boolean;
+}
+
+export interface IMessageDto {
+  id: string;
+  sender: ICharacterWithColorDto;
+  content: string;
+  sentDate: Date;
 }

@@ -13,3 +13,10 @@ export interface ICharacterDetails extends ICharacterDto {
   negativeTraits: string;
   color: string;
 }
+
+export interface ICharacterWithColorDto {
+  id: string;
+  name: string;
+  image: string | null;
+  color: string;
+}

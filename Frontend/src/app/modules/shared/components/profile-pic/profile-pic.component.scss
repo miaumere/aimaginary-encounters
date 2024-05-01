@@ -1,7 +1,7 @@
 @import "variables.scss";
 
 .profile-pic {
-  border-radius: 50%;
+  border-radius: $avatar-border-radius;
 
   &__image {
     width: 100px;
