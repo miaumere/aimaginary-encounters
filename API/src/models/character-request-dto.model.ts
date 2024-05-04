@@ -8,5 +8,14 @@ export interface ICharacterRequestDto {
 	negativeTraits: string;
 	skills: string;
 	color: string;
-	image: Express.Multer.File;
+	image: IFile;
+}
+
+export interface IFile {
+	fieldname: string;
+	originalname: string;
+	encoding: string;
+	mimetype: string;
+	buffer: Buffer;
+	size: number;
 }

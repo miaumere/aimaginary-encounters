@@ -1,14 +1,10 @@
-import { CharacterEntity } from 'src/entities/character.entity';
+import { CharacterEntity } from '../entities/character.entity';
 import { Injectable } from '@nestjs/common';
-import { Attitude } from 'src/enums/attitude.enum';
-import { ChatEntity } from 'src/entities/chat.entity';
+import { Attitude } from '../enums/attitude.enum';
+import { ChatEntity } from '../entities/chat.entity';
 import { ConfigService } from '@nestjs/config';
-import axios from 'axios';
 import OpenAI from 'openai';
-import {
-	ChatCompletionMessageParam,
-	ChatCompletionSystemMessageParam,
-} from 'openai/resources';
+import { ChatCompletionMessageParam } from 'openai/resources';
 
 @Injectable()
 export class AiHelperService {

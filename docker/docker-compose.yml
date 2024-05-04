@@ -1,0 +1,49 @@
+name: aimaginary-encounters
+services:
+  application:
+    container_name: aimaginary-encounters-app
+    image: aimaginary-encounters:latest
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./env.config
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      network:
+        ipv4_address: 10.6.0.2
+
+  database:
+    container_name: aimaginary-encounters-db
+    image: postgres:16.2
+    # For local development
+    ports:
+      - "5433:5432"
+    restart: always
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: aimaginary-encounters
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'pg_isready -U postgres && psql -U postgres -d aimaginary-encounters -c "SELECT 1;" ',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      network:
+        ipv4_address: 10.6.0.3
+
+networks:
+  network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.6.0.0/24
+          gateway: 10.6.0.1

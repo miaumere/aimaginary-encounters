@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CharacterEntity } from 'src/entities/character.entity';
-import { ChatEntity } from 'src/entities/chat.entity';
-import { MessageEntity } from 'src/entities/message.entity';
-import { Attitude } from 'src/enums/attitude.enum';
-import { IChatDetailsDto, IChatDto } from 'src/models/chat-dto.model';
-import { IChatRequestDto } from 'src/models/chat-request.model';
-import { AiHelperService } from 'src/shared/ai-helper.service';
+import { CharacterEntity } from '../entities/character.entity';
+import { ChatEntity } from '../entities/chat.entity';
+import { MessageEntity } from '../entities/message.entity';
+import { Attitude } from '../enums/attitude.enum';
+import { IChatDetailsDto, IChatDto } from '../models/chat-dto.model';
+import { IChatRequestDto } from '../models/chat-request.model';
+import { AiHelperService } from '../shared/ai-helper.service';
 import { Repository } from 'typeorm';
 
 @Injectable()

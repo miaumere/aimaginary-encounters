@@ -9,8 +9,8 @@ import {
 	Delete,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { IChatDetailsDto, IChatDto } from 'src/models/chat-dto.model';
-import { IChatRequestDto } from 'src/models/chat-request.model';
+import { IChatDetailsDto, IChatDto } from '../models/chat-dto.model';
+import { IChatRequestDto } from '../models/chat-request.model';
 
 @Controller('api/chat')
 export class ChatController {

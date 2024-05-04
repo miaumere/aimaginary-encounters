@@ -9,9 +9,12 @@ import {
 	Body,
 } from '@nestjs/common';
 import { CharactersService } from './characters.service';
-import { ICharacterDto } from 'src/models/character-dto.model';
+import { ICharacterDto } from '../models/character-dto.model';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ICharacterRequestDto } from 'src/models/character-request-dto.model';
+import {
+	ICharacterRequestDto,
+	IFile,
+} from '../models/character-request-dto.model';
 
 @Controller('api/characters')
 export class CharactersController {
@@ -31,7 +34,7 @@ export class CharactersController {
 	@UseInterceptors(FileInterceptor('image'))
 	async upserCharacter(
 		@Body() body: ICharacterRequestDto,
-		@UploadedFile() file: Express.Multer.File
+		@UploadedFile() file: IFile
 	) {
 		return await this._charactersService.upsertCharacter(body, file);
 	}

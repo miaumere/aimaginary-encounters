@@ -6,7 +6,7 @@ import {
 	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CharacterEntity } from './character.entity';
-import { Attitude } from 'src/enums/attitude.enum';
+import { Attitude } from '../enums/attitude.enum';
 import { MessageEntity } from './message.entity';
 
 @Entity('chat')

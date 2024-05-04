@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CharacterEntity } from 'src/entities/character.entity';
-import { ICharacterDto } from 'src/models/character-dto.model';
-import { ICharacterRequestDto } from 'src/models/character-request-dto.model';
+import { CharacterEntity } from '../entities/character.entity';
+import { ICharacterDto } from '../models/character-dto.model';
+import {
+	ICharacterRequestDto,
+	IFile,
+} from '../models/character-request-dto.model';
 import { Repository } from 'typeorm';
+
 const sharp = require('sharp');
 
 @Injectable()
@@ -39,10 +43,7 @@ export class CharactersService {
 		return character;
 	}
 
-	async upsertCharacter(
-		character: ICharacterRequestDto,
-		file: Express.Multer.File
-	) {
+	async upsertCharacter(character: ICharacterRequestDto, file: IFile) {
 		const characterEntity = character.id
 			? await this._charactersRepository.findOneBy({
 					id: character.id,
@@ -74,6 +75,7 @@ export class CharactersService {
 	}
 
 	async deleteCharacter(id: string) {
+		// TODO: delete all chats and messages related to this character
 		return await this._charactersRepository.delete(id);
 	}
 }
