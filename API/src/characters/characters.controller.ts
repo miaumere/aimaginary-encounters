@@ -9,7 +9,10 @@ import {
 	Body,
 } from '@nestjs/common';
 import { CharactersService } from './characters.service';
-import { ICharacterDto } from '../models/character-dto.model';
+import {
+	ICharacterDetails,
+	ICharacterDto,
+} from '../models/character-dto.model';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
 	ICharacterRequestDto,
@@ -26,13 +29,13 @@ export class CharactersController {
 	}
 
 	@Get(':id')
-	async getCharacter(@Param('id') id: string): Promise<ICharacterDto> {
+	async getCharacter(@Param('id') id: string): Promise<ICharacterDetails> {
 		return await this._charactersService.getCharacter(id);
 	}
 
 	@Post()
 	@UseInterceptors(FileInterceptor('image'))
-	async upserCharacter(
+	async upsertCharacter(
 		@Body() body: ICharacterRequestDto,
 		@UploadedFile() file: IFile
 	) {

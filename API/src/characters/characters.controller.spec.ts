@@ -2,6 +2,19 @@ import { Test } from '@nestjs/testing';
 import { CharactersController } from './characters.controller';
 import { CharactersService } from './characters.service';
 
+const exampleCharacter = {
+	id: 'e7c629ee-830d-45e2-a237-9ebcc04d181b',
+	name: 'Test',
+	image: 'test.jpg',
+	age: '30',
+	gender: 'male',
+	backstory: 'Example backstory',
+	skills: 'test',
+	positiveTraits: 'test',
+	negativeTraits: 'test',
+	color: 'red',
+};
+
 describe('CharactersController', () => {
 	let controller: CharactersController;
 	let service: CharactersService;
@@ -32,6 +45,17 @@ describe('CharactersController', () => {
 								},
 							])
 						),
+						deleteCharacter: jest
+							.fn()
+							.mockImplementation(() => Promise.resolve()),
+						getCharacter: jest
+							.fn()
+							.mockImplementation(() =>
+								Promise.resolve(exampleCharacter)
+							),
+						upsertCharacter: jest
+							.fn()
+							.mockImplementation(() => Promise.resolve()),
 					},
 				},
 			],
@@ -64,6 +88,22 @@ describe('CharactersController', () => {
 					image: 'test3.jpg',
 				},
 			]);
+		});
+	});
+
+	describe('remove', () => {
+		it('should delete a character', async () => {
+			await expect(
+				controller.remove('e7c629ee-830d-45e2-a237-9ebcc04d181b')
+			).resolves.toEqual(undefined);
+		});
+	});
+
+	describe('getCharacter', () => {
+		it('should return a character', async () => {
+			await expect(
+				controller.getCharacter(exampleCharacter.id)
+			).resolves.toEqual(exampleCharacter);
 		});
 	});
 });

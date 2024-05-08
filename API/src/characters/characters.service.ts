@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CharacterEntity } from '../entities/character.entity';
-import { ICharacterDto } from '../models/character-dto.model';
+import {
+	ICharacterDetails,
+	ICharacterDto,
+} from '../models/character-dto.model';
 import {
 	ICharacterRequestDto,
 	IFile,
@@ -32,7 +35,7 @@ export class CharactersService {
 		});
 	}
 
-	async getCharacter(id: string): Promise<ICharacterDto> {
+	async getCharacter(id: string): Promise<ICharacterDetails> {
 		const character = await this._charactersRepository.findOneBy({
 			id,
 		});
