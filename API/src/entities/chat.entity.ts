@@ -8,6 +8,7 @@ import {
 import { CharacterEntity } from './character.entity';
 import { Attitude } from '../enums/attitude.enum';
 import { MessageEntity } from './message.entity';
+import { UserEntity } from './user.entity';
 
 @Entity('chat')
 export class ChatEntity {
@@ -41,16 +42,12 @@ export class ChatEntity {
 	})
 	character2Attitude: Attitude;
 
-	@Column({ default: false })
-	isCharacter2CurrentUser: boolean;
-
 	@Column()
 	createdAt: Date = new Date();
 
-	// TODO: auth
-	// @Column()
-	// createdBy: string;
-
 	@OneToMany(() => MessageEntity, (msg) => msg.chat)
 	messages: MessageEntity[];
+
+	@ManyToOne(() => UserEntity, (user) => user)
+	createdBy: UserEntity;
 }

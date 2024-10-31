@@ -1,0 +1,63 @@
+<div class="container">
+  <div class="container__form">
+    @if (isRegister) {
+    <form [formGroup]="registerForm" class="form">
+      <label class="form-label">
+        Username
+        <input
+          type="text"
+          formControlName="username"
+          autocomplete="new-password"
+          appErrorDisplay
+        />
+      </label>
+
+      <label class="form-label">
+        Password
+        <input
+          type="password"
+          formControlName="password"
+          autocomplete="new-password"
+        />
+      </label>
+
+      <label class="form-label">
+        Re-type password:
+        <input type="password" formControlName="retryPassword" />
+      </label>
+    </form>
+    <button [disabled]="!registerForm.valid" (click)="register()">
+      🔐 Register
+    </button>
+
+    } @else {
+    <form [formGroup]="form" class="form">
+      <label class="form-label">
+        Username
+        <input type="text" formControlName="username" />
+      </label>
+
+      <label class="form-label">
+        Password
+        <input type="password" formControlName="password" appErrorDisplay />
+      </label>
+    </form>
+    <button [disabled]="!form.valid" (click)="login()">🔑 Login</button>
+    }
+  </div>
+  <div class="container__switch-box">
+    @if(isRegister) {
+    <span> You have an account?</span>
+    <div>
+      Click to <span (click)="toggleIsRegister()" class="link">login❣️ </span>
+    </div>
+
+    } @else {
+    <span>You don't have an account yet?</span>
+    <div>
+      Click to
+      <span (click)="toggleIsRegister()" class="link">register❣️ </span>
+    </div>
+    }
+  </div>
+</div>

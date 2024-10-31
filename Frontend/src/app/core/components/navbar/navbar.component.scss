@@ -14,24 +14,24 @@
   &__title {
     font-size: 24px;
     font-weight: bold;
+    cursor: pointer;
   }
 
   &__links {
     list-style-type: none;
     display: flex;
+    align-items: center;
     gap: 16px;
-    transition: 0.3s;
     cursor: pointer;
-
-    &:hover {
-      color: $accent-color;
-    }
   }
 }
 
-.link {
+.user-info {
   display: flex;
+  gap: 4px;
   align-items: center;
 
-  font-size: 14px;
+  &__username {
+    cursor: default;
+  }
 }

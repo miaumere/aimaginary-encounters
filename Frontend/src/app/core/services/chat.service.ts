@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ICharacterDetails, ICharacterDto } from './models/character-dto.model';
-import { ICharacterRequestDto } from './models/character-request-dto.model';
-import { Observable } from 'rxjs';
+
 import {
   IChatDetailsDto,
   IChatDto,
@@ -43,5 +41,9 @@ export class ChatService {
       `${this._baseUrl}/messages/${chatId}`,
       {}
     );
+  }
+
+  clearChatMessages(chatId: string) {
+    return this.http.delete(`${this._baseUrl}/messages/${chatId}`);
   }
 }

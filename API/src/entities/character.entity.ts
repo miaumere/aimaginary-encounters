@@ -4,9 +4,11 @@ import {
 	Column,
 	OneToMany,
 	JoinColumn,
+	ManyToOne,
 } from 'typeorm';
 import { ChatEntity } from './chat.entity';
 import { MessageEntity } from './message.entity';
+import { UserEntity } from './user.entity';
 
 @Entity('character')
 export class CharacterEntity {
@@ -43,10 +45,6 @@ export class CharacterEntity {
 	@Column()
 	createdAt: Date = new Date();
 
-	// TODO: auth
-	// @Column()
-	// createdBy: string;
-
 	@OneToMany(() => ChatEntity, (chat) => chat.character1)
 	chatUser1: CharacterEntity;
 
@@ -55,4 +53,7 @@ export class CharacterEntity {
 
 	@OneToMany(() => MessageEntity, (msg) => msg.author)
 	characterMessages: CharacterEntity;
+
+	@ManyToOne(() => UserEntity, (user) => user)
+	createdBy: UserEntity;
 }

@@ -7,6 +7,6 @@ import { Component, Input } from '@angular/core';
 })
 export class ProfilePicComponent {
   @Input() size?: string = '32px';
-  @Input() image: string | null = null;
-  @Input() name: string | null = null;
+  @Input() image?: string | null = null;
+  @Input() name?: string | null = null;
 }

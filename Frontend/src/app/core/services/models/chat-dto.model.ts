@@ -5,7 +5,6 @@ export interface IChatDto {
   id: string;
   name: string;
   participants: ICharacterDto[];
-  isCharacter2CurrentUser: boolean;
 }
 
 export interface IChatDetailsDto {
@@ -16,7 +15,6 @@ export interface IChatDetailsDto {
   character2: ICharacterDto | null;
   character1Attitude: Attitude;
   character2Attitude: Attitude | null;
-  isCharacter2CurrentUser: boolean;
 }
 
 export interface IMessageDto {

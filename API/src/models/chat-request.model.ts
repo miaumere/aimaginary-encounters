@@ -8,5 +8,4 @@ export interface IChatRequestDto {
 	character2Id: string | null;
 	character1Attitude: AttitudeString;
 	character2Attitude: AttitudeString | null;
-	isCharacter2CurrentUser: boolean;
 }

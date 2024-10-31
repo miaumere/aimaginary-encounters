@@ -6,19 +6,12 @@
         [size]="'40px'"
         [image]="chat.participants[0].image"
       ></app-profile-pic>
-      @if(chat.isCharacter2CurrentUser) {
-      <app-profile-pic
-        [name]="'user'"
-        [size]="'40px'"
-        *ngIf="chat.isCharacter2CurrentUser"
-      ></app-profile-pic>
-      } @else {
+
       <app-profile-pic
         [name]="chat.participants[1].name"
         [size]="'40px'"
         [image]="chat.participants[1].image"
       ></app-profile-pic>
-      }
     </div>
     <h4 class="chat-card-name">{{ chat.name }}</h4>
   </div>

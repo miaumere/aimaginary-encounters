@@ -7,6 +7,7 @@ import {
 	UseInterceptors,
 	UploadedFile,
 	Body,
+	UseGuards,
 } from '@nestjs/common';
 import { CharactersService } from './characters.service';
 import {
@@ -18,7 +19,9 @@ import {
 	ICharacterRequestDto,
 	IFile,
 } from '../models/character-request-dto.model';
+import { AuthGuard } from 'src/user/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('api/characters')
 export class CharactersController {
 	constructor(private readonly _charactersService: CharactersService) {}

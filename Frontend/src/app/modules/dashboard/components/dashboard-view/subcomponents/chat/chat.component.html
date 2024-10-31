@@ -28,14 +28,15 @@
       </div>
       } @empty {
       <div class="chat-message chat-message--empty">
-        Click '❤️‍🔥 Generate' to start a conversation!
+        Click '🔮 Generate' to start a conversation!
       </div>
       }
     </div>
   </div>
   <div class="chat-options" [ngClass]="{ disabled: isActionInProgress }">
-    <button class="chat-button" (click)="generateMore()">❤️‍🔥 Generate</button>
-    <button class="chat-button">🧹 Clear conversation</button>
-    <button class="chat-button">🔃 Re-try conversation</button>
+    <button class="chat-button" (click)="generateMore()">🔮 Generate</button>
+    <button class="chat-button" (click)="clearConversation()">
+      🧹 Clear conversation
+    </button>
   </div>
 </div>

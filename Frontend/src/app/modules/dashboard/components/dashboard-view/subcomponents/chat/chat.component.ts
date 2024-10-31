@@ -71,4 +71,16 @@ export class ChatComponent extends BaseComponent implements OnInit {
       })
     );
   }
+
+  clearConversation() {
+    if (!confirm('Are you sure you want to clear the conversation?')) return;
+
+    this.isActionInProgress = true;
+    this.subscriptions$.add(
+      this._chatService.clearChatMessages(this.chatId).subscribe(() => {
+        this.messages = [];
+        this.isActionInProgress = false;
+      })
+    );
+  }
 }

@@ -46,6 +46,8 @@
 .form {
   display: flex;
   flex-direction: column;
+  align-items: center;
+
   gap: 4px;
 
   &__first-section {
@@ -57,6 +59,7 @@
 
   &__second-section {
     display: flex;
+    flex-direction: column;
     align-items: start;
     gap: 16px;
     flex-wrap: wrap;
@@ -82,8 +85,8 @@
   flex-direction: column;
   gap: 4px;
   margin: 0 8px;
-  width: 100%;
   font-size: 12px;
+  width: 600px;
 
   &__textarea {
     resize: vertical;
@@ -107,4 +110,8 @@
   &--selected {
     border: 2px dashed $black;
   }
+}
+
+h4 {
+  align-self: center;
 }

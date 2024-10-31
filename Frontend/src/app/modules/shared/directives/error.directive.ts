@@ -58,6 +58,8 @@ export class ErrorDisplayDirective implements OnInit, OnDestroy {
         errorMessage = `This field must be less than ${maxLength.requiredLength} characters long`;
       } else if (errors.includes('required')) {
         errorMessage = 'This field is required';
+      } else if (errors.includes('pattern')) {
+        errorMessage = 'This field must contain only letters and numbers';
       }
 
       const errorElement = this.renderer.createElement('div');

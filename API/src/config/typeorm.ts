@@ -17,11 +17,12 @@ const config = {
 	username: process.env.DB_USERNAME,
 	password: process.env.DB_PASSWORD,
 	database: process.env.DB_DATABASE,
-	migrationsTableName: 'migrations',
 	entities: [__dirname + '/**/*.entity{.ts,.js}'],
+	migrationsTableName: 'migrations',
 	migrations: [__dirname + '/../migrations/*{.ts,.js}'],
 	autoLoadEntities: true,
-	synchronize: false,
+	// Setting synchronize: true shouldn't be used in production - otherwise you can lose production data.
+	synchronize: process.env.NODE_ENV === 'development',
 };
 
 export default registerAs('typeorm', () => config);

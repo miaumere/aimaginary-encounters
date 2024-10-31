@@ -33,7 +33,6 @@ export class EditChatDetailsComponent extends BaseComponent implements OnInit {
     ]),
     additionalContext: new FormControl('', [Validators.maxLength(250)]),
     character1: new FormControl(null, [Validators.required]),
-    isCharacter2CurrentUser: new FormControl(true),
     character2: new FormControl(null),
   });
   editMode = false;
@@ -44,6 +43,13 @@ export class EditChatDetailsComponent extends BaseComponent implements OnInit {
   character1Attitude = Attitude[Attitude.Friendly];
   character2Attitude = Attitude[Attitude.Friendly];
 
+  get character1(): ICharacterDto | null {
+    return this.form.get('character1')?.value ?? null;
+  }
+
+  get character2(): ICharacterDto | null {
+    return this.form.get('character2')?.value ?? null;
+  }
   constructor(
     private _chatService: ChatService,
     private _charactersService: CharactersService,
@@ -56,16 +62,6 @@ export class EditChatDetailsComponent extends BaseComponent implements OnInit {
     this.editMode = !!this.chatId;
   }
   ngOnInit(): void {
-    this.form.controls['isCharacter2CurrentUser'].valueChanges.subscribe(
-      (value) => {
-        const control = this.form.get('character2');
-        value
-          ? control?.clearValidators()
-          : control?.addValidators(Validators.required);
-
-        control?.updateValueAndValidity();
-      }
-    );
     this._getCharacters();
     if (this.editMode) {
       this._getChat();
@@ -76,19 +72,20 @@ export class EditChatDetailsComponent extends BaseComponent implements OnInit {
     this.subscriptions$.add(
       this._chatService.getChatDetails(this.chatId).subscribe((chat) => {
         this.character1Attitude = Attitude[chat.character1Attitude];
-        this.character2Attitude = chat.isCharacter2CurrentUser
-          ? Attitude[Attitude.Friendly]
-          : Attitude[chat.character2Attitude as Attitude];
+        this.character2Attitude = Attitude[chat.character2Attitude as Attitude];
 
         this.form.patchValue({
           name: chat.name,
           additionalContext: chat.additionalContext,
-          isCharacter2CurrentUser: chat.isCharacter2CurrentUser,
           character1: chat.character1 as any,
           character2: chat.character2 as any,
         });
       })
     );
+  }
+
+  onCharacterSelected(event: any, formControlName: string) {
+    this.form.get(formControlName)?.setValue(event);
   }
 
   private _getCharacters() {
@@ -107,7 +104,6 @@ export class EditChatDetailsComponent extends BaseComponent implements OnInit {
 
     const character1 = this.form.value.character1 as unknown as ICharacterDto;
     const character2 = this.form.value.character2 as unknown as ICharacterDto;
-    const isCharacter2CurrentUser = !!this.form.value.isCharacter2CurrentUser;
 
     const request: IChatRequestDto = {
       id: this.chatId,
@@ -115,11 +111,8 @@ export class EditChatDetailsComponent extends BaseComponent implements OnInit {
       additionalContext: this.form.value.additionalContext ?? null,
       character1Id: character1.id,
       character1Attitude: this.character1Attitude as unknown as Attitude,
-      character2Id: isCharacter2CurrentUser ? null : character2.id,
-      character2Attitude: isCharacter2CurrentUser
-        ? null
-        : (this.character2Attitude as unknown as Attitude),
-      isCharacter2CurrentUser: isCharacter2CurrentUser,
+      character2Id: character2.id,
+      character2Attitude: this.character2Attitude as unknown as Attitude,
     };
 
     this.subscriptions$.add(

@@ -26,8 +26,21 @@ body {
 }
 
 button {
+  display: block;
   cursor: pointer;
   margin-top: 8px;
+  color: $accent-color;
+  transition: 0.3s;
+  cursor: pointer;
+  &:hover {
+    color: $cyan;
+  }
+  &::before {
+    content: "[";
+  }
+  &::after {
+    content: "]";
+  }
 }
 
 .disabled,
@@ -95,4 +108,13 @@ hr {
 .error-message {
   color: $red;
   font-size: 10px;
+}
+
+.link {
+  color: $violet;
+  transition: 0.3s;
+  cursor: pointer;
+  &:hover {
+    color: $cyan;
+  }
 }

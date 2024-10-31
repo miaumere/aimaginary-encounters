@@ -8,6 +8,7 @@ import { IChatDetailsDto, IChatDto } from '../models/chat-dto.model';
 import { IChatRequestDto } from '../models/chat-request.model';
 import { AiHelperService } from '../shared/ai-helper.service';
 import { Repository } from 'typeorm';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class ChatService {
@@ -18,14 +19,25 @@ export class ChatService {
 		private readonly _charactersRepository: Repository<CharacterEntity>,
 		@InjectRepository(MessageEntity)
 		private readonly _messagesRepository: Repository<MessageEntity>,
-		private readonly _aiHelperService: AiHelperService
+		private readonly _aiHelperService: AiHelperService,
+		private readonly _userService: UserService
 	) {}
 
 	async getChats() {
 		const result: IChatDto[] = [];
+		const currentUser = this._userService.currentUser$.getValue();
+
 		const chats = await this._chatRepository.find({
 			relations: ['character1', 'character2'],
+			where: {
+				createdBy: currentUser,
+			},
 		});
+
+		if (!chats) {
+			return result;
+		}
+
 		for (const chat of chats) {
 			result.push({
 				id: chat.id,
@@ -42,7 +54,6 @@ export class ChatService {
 						image: chat.character2?.image,
 					},
 				],
-				isCharacter2CurrentUser: chat.isCharacter2CurrentUser,
 			});
 		}
 
@@ -51,14 +62,19 @@ export class ChatService {
 
 	async getChatDetails(id: string): Promise<IChatDetailsDto> {
 		const chat = await this._chatRepository.findOne({
-			relations: ['character1', 'character2'],
+			relations: ['character1', 'character2', 'createdBy'],
 			where: {
 				id,
 			},
 		});
 
 		if (!chat) {
-			throw new Error('Character not found');
+			throw new Error('Chat not found');
+		}
+		if (
+			chat.createdBy.id !== this._userService.currentUser$.getValue().id
+		) {
+			throw new Error('You can only view your own chats');
 		}
 
 		const result: IChatDetailsDto = {
@@ -77,7 +93,6 @@ export class ChatService {
 			},
 			character1Attitude: chat.character1Attitude,
 			character2Attitude: chat.character2Attitude,
-			isCharacter2CurrentUser: chat.isCharacter2CurrentUser,
 		};
 
 		return result;
@@ -92,7 +107,6 @@ export class ChatService {
 
 		chatEntity.name = request.name;
 		chatEntity.additionalContext = request.additionalContext;
-		chatEntity.isCharacter2CurrentUser = request.isCharacter2CurrentUser;
 
 		const char1: CharacterEntity =
 			await this._charactersRepository.findOneBy({
@@ -104,29 +118,46 @@ export class ChatService {
 		chatEntity.character1 = char1;
 		chatEntity.character1Attitude = Attitude[request.character1Attitude];
 
-		if (!request.isCharacter2CurrentUser) {
-			const char2: CharacterEntity =
-				await this._charactersRepository.findOneBy({
-					id: request.character2Id,
-				});
-			if (!char2) {
-				throw new Error('Character not found');
-			}
-			chatEntity.character2 = char2;
-			chatEntity.character2Attitude =
-				Attitude[request.character2Attitude];
+		const char2: CharacterEntity =
+			await this._charactersRepository.findOneBy({
+				id: request.character2Id,
+			});
+		if (!char2) {
+			throw new Error('Character not found');
 		}
+		chatEntity.character2 = char2;
+		chatEntity.character2Attitude = Attitude[request.character2Attitude];
+
+		chatEntity.createdBy = this._userService.currentUser$.getValue();
 
 		return await this._chatRepository.save(chatEntity);
 	}
 
 	async deleteChat(id: string) {
+		const currentUser = this._userService.currentUser$.getValue();
+		const chat = await this._chatRepository.findOne({
+			relations: ['createdBy'],
+			where: { id },
+		});
+
+		if (!chat) {
+			throw new Error('Chat not found');
+		}
+		if (chat.createdBy.id !== currentUser.id) {
+			throw new Error('You can only delete your own chats');
+		}
+		const messages = await this._messagesRepository.find({
+			where: { chat },
+		});
+		this._messagesRepository.remove(messages);
+
 		return await this._chatRepository.delete(id);
 	}
 
 	async getChatMessages(id: string) {
+		const currentUser = this._userService.currentUser$.getValue();
 		const chat = await this._chatRepository.findOne({
-			relations: ['messages', 'messages.author'],
+			relations: ['messages', 'messages.author', 'createdBy'],
 			where: {
 				id,
 			},
@@ -134,6 +165,10 @@ export class ChatService {
 
 		if (!chat) {
 			throw new Error('Chat not found');
+		}
+
+		if (chat.createdBy.id !== currentUser.id) {
+			throw new Error('You can only view your own chat messages');
 		}
 		const messages = chat.messages;
 
@@ -195,6 +230,28 @@ export class ChatService {
 
 		await this._messagesRepository.save(message);
 		chat.messages.push(message);
+		await this._chatRepository.save(chat);
+	}
+
+	async clearChatMessages(chatId: string) {
+		const chat = await this._chatRepository.findOne({
+			relations: ['messages', 'createdBy'],
+			where: {
+				id: chatId,
+			},
+		});
+
+		if (!chat) {
+			throw new Error('Chat not found');
+		}
+		if (
+			chat.createdBy.id !== this._userService.currentUser$.getValue().id
+		) {
+			throw new Error('You can only clear your own chat messages');
+		}
+
+		await this._messagesRepository.remove(chat.messages);
+		chat.messages = [];
 		await this._chatRepository.save(chat);
 	}
 }

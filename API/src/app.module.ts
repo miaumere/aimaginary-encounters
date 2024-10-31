@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import typeorm from './config/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { UserModule } from './user/user.module';
 
 @Module({
 	imports: [
@@ -25,6 +26,7 @@ import { join } from 'path';
 		}),
 		CharactersModule,
 		ChatModule,
+		UserModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

@@ -10,6 +10,10 @@ import {
 	IFile,
 } from '../models/character-request-dto.model';
 import { Repository } from 'typeorm';
+import { UserService } from 'src/user/user.service';
+import { throws } from 'assert';
+import { ChatEntity } from 'src/entities/chat.entity';
+import { MessageEntity } from 'src/entities/message.entity';
 
 const sharp = require('sharp');
 
@@ -17,13 +21,23 @@ const sharp = require('sharp');
 export class CharactersService {
 	constructor(
 		@InjectRepository(CharacterEntity)
-		private readonly _charactersRepository: Repository<CharacterEntity>
+		private readonly _charactersRepository: Repository<CharacterEntity>,
+		@InjectRepository(ChatEntity)
+		private readonly _chatsRepository: Repository<ChatEntity>,
+		@InjectRepository(MessageEntity)
+		private readonly _messagesRepository: Repository<MessageEntity>,
+		private readonly _userService: UserService
 	) {}
 
 	async getCharacterList(): Promise<ICharacterDto[]> {
+		const currentUser = this._userService.currentUser$.getValue();
+
 		const characters = await this._charactersRepository.find({
 			order: {
 				name: 'ASC',
+			},
+			where: {
+				createdBy: currentUser,
 			},
 		});
 		return characters.map((character) => {
@@ -61,6 +75,7 @@ export class CharactersService {
 		characterEntity.negativeTraits = character.negativeTraits;
 		characterEntity.skills = character.skills;
 		characterEntity.color = character.color;
+		characterEntity.createdBy = this._userService.currentUser$.getValue();
 
 		if (file) {
 			await sharp(file.buffer)
@@ -78,7 +93,34 @@ export class CharactersService {
 	}
 
 	async deleteCharacter(id: string) {
-		// TODO: delete all chats and messages related to this character
+		const character = await this._charactersRepository.findOne({
+			relations: ['createdBy'],
+			where: { id },
+		});
+
+		if (!character) {
+			throw new Error('Character not found');
+		}
+
+		const currentUser = this._userService.currentUser$.getValue();
+
+		if (character.createdBy.id !== currentUser.id) {
+			throw new Error('You can only delete your own characters');
+		}
+
+		const chats = await this._chatsRepository.find({
+			where: [{ character1: character }, { character2: character }],
+		});
+
+		if (chats.length) {
+			for (const chat of chats) {
+				const messages = await this._messagesRepository.find({
+					where: { chat },
+				});
+				await this._messagesRepository.remove(messages);
+			}
+			await this._chatsRepository.remove(chats);
+		}
 		return await this._charactersRepository.delete(id);
 	}
 }

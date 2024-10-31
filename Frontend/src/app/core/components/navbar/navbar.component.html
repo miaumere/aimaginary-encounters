@@ -1,18 +1,26 @@
 <nav class="navbar">
-  <div class="header navbar__title">🪄 AImaginary Encounters</div>
+  <div class="header navbar__title" [routerLink]="['/dashboard']">
+    🪄 AImaginary Encounters
+  </div>
   <ul class="navbar__links">
-    <li class="link" [routerLink]="['/dashboard']">Dashboard</li>
-    <li class="link" routerLink="/">
-      <app-profile-pic [name]="'user'"></app-profile-pic>
+    <li class="link" [routerLink]="['/dashboard']">[ Dashboard ]</li>
+    <li routerLink="/">
+      <div class="user-info">
+        @if(user) {
+        <span class="user-info__username"
+          >👤 Logged as: {{ user.username }}</span
+        >
+        <span
+          (click)="logout()"
+          class="link"
+          *ngIf="_authService.user$ | async"
+        >
+          [🔓 Logout ]
+        </span>
+        } @else {
+        <a routerLink="./auth" class="link">[🔑 Login ]</a>
+        }
+      </div>
     </li>
   </ul>
 </nav>
-
-<!--
-    TODO: implement user authentication
-    <div class="user-info">
-    <span class="username">{{
-      (_authService.user$ | async)?.username ?? "not logged in"
-    }}</span>
-    <span (click)="logout()" class="icon logout"> 🔓 </span>
-  </div> -->

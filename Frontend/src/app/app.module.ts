@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
 import { Interceptor } from './core/interceptor';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { AuthModule } from './modules/auth/auth.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,6 +17,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
     AppRoutingModule,
     SharedModule,
     CoreModule,
+    AuthModule,
     HttpClientModule,
     ToastrModule.forRoot({
       preventDuplicates: true,
