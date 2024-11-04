@@ -23,3 +23,15 @@ export interface IMessageDto {
 	content: string;
 	sentDate: Date;
 }
+
+export interface IEditMessageRequestDto {
+	content: string;
+	chatId: string;
+	messageId: string;
+}
+
+export interface ICreateMessageRequestDto {
+	content: string;
+	chatId: string;
+	senderId: string;
+}

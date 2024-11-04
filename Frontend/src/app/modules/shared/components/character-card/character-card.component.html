@@ -1,10 +1,13 @@
 <div class="character-card">
   <div class="character-card__header">
-    <img
-      class="character-card-avatar"
-      [src]="character.image"
-      alt="Character Avatar"
-    />
+    <div class="character-card-avatar">
+      <app-profile-pic
+        [size]="'80px'"
+        [image]="character.image"
+        [name]="character.name"
+      ></app-profile-pic>
+    </div>
+
     <h4 class="character-card-name">{{ character.name }}</h4>
   </div>
   <div class="character-card__actions">

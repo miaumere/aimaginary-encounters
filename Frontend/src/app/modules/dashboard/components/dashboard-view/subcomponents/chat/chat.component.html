@@ -1,14 +1,35 @@
 <div class="chat-container" *ngIf="chatDetails">
   <div class="chat-header">
-    <h4 class="chat-header__name">💬{{ chatDetails.name }}</h4>
-    <p *ngIf="chatDetails?.additionalContext" class="chat-header__context">
-      {{ chatDetails.additionalContext }}
-    </p>
+    <div class="participants">
+      <app-profile-pic
+        [name]="chatDetails.character1.name"
+        [size]="'40px'"
+        [image]="chatDetails.character1.image"
+      ></app-profile-pic>
+
+      <app-profile-pic
+        [name]="chatDetails.character2.name"
+        [size]="'40px'"
+        [image]="chatDetails.character2.image"
+      ></app-profile-pic>
+    </div>
+    <div>
+      <h4 class="chat-header__name">💬{{ chatDetails.name }}</h4>
+      <p *ngIf="chatDetails?.additionalContext" class="chat-header__context">
+        {{ chatDetails.additionalContext }}
+      </p>
+    </div>
   </div>
   <div class="chat" #chatBox>
     <div class="chat-messages">
       @for(message of messages; track message.id) {
-      <div class="chat-message">
+      <div
+        class="chat-message"
+        [ngClass]="{
+          'chat-message--received':
+            message.sender.id === chatDetails.character2.id
+        }"
+      >
         <div class="chat-message-author">
           <app-profile-pic
             [size]="'50px'"
@@ -16,15 +37,62 @@
             [image]="message.sender.image"
           >
           </app-profile-pic>
-          <p>{{ message.sender.name }}</p>
+          <p class="chat-message-author__name">{{ message.sender.name }}</p>
           <p class="timestamp">{{ message.sentDate | date : "shortTime" }}</p>
         </div>
+        <div class="chat-message-options">
+          @if(messageInEditMode?.id === message.id) {
+          <span
+            class="icon chat-message-options__option"
+            (click)="updateMessage()"
+          >
+            ✔️
+          </span>
+
+          <span
+            class="icon chat-message-options__option"
+            (click)="toggleEditModeForMessage(null)"
+          >
+            ❌
+          </span>
+
+          } @else {
+          <span
+            class="icon chat-message-options__option"
+            (click)="toggleEditModeForMessage(message)"
+          >
+            ✏️
+          </span>
+          }
+
+          <span
+            class="icon chat-message-options__option"
+            (click)="deleteMessage(message.id)"
+          >
+            🗑️
+          </span>
+        </div>
+        @if(messageInEditMode?.id === message.id) {
+
+        <textarea
+          class="chat-message-content chat-message-content--edit"
+          [ngStyle]="{ background: message.sender.color }"
+          (keyup.escape)="toggleEditModeForMessage(null)"
+          (keyup.enter)="updateMessage()"
+          [(ngModel)]="message.content"
+          name="messageContent{{ message.id }}"
+          >{{ message.content }}</textarea
+        >
+
+        } @else {
         <div
           class="chat-message-content"
           [ngStyle]="{ background: message.sender.color }"
         >
           {{ message.content }}
         </div>
+
+        }
       </div>
       } @empty {
       <div class="chat-message chat-message--empty">
@@ -33,9 +101,71 @@
       }
     </div>
   </div>
+  <div class="send-message-container">
+    <div class="textarea-container">
+      <div class="write-as">
+        <span class="write-as__text"> Write message as if you were: </span>
+        <div class="write-as__chars-list">
+          <app-profile-pic
+            class="chat-participant"
+            [ngClass]="{
+              'chat-participant--selected':
+                selectedCharacter?.id === chatDetails.character1.id
+            }"
+            [size]="'25px'"
+            [name]="chatDetails.character1.name"
+            [image]="chatDetails.character1.image"
+            (click)="selectCharacter(chatDetails.character1)"
+          >
+          </app-profile-pic>
+          <app-profile-pic
+            class="chat-participant"
+            [ngClass]="{
+              'chat-participant--selected':
+                selectedCharacter?.id === chatDetails.character2.id
+            }"
+            [size]="'25px'"
+            [name]="chatDetails.character2.name"
+            [image]="chatDetails.character2.image"
+            (click)="selectCharacter(chatDetails.character2)"
+          >
+          </app-profile-pic>
+        </div>
+      </div>
+      <textarea
+        class="new-message-input"
+        placeholder="Type a message..."
+        [formControl]="messageFormControl"
+      ></textarea>
+      <button
+        class="chat-button chat-button--send-msg"
+        (click)="sendMessage()"
+        (keyup.enter)="sendMessage()"
+        [disabled]="
+          !selectedCharacter || messageFormControl.invalid || isActionInProgress
+        "
+      >
+        📨 Send message
+      </button>
+      <span class="write-as__text">
+        If you don't want to write a message, click '🔮 Generate' to get a
+        message from the AI. <br />
+        Selected character will be the one who sends the message.
+      </span>
+    </div>
+  </div>
   <div class="chat-options" [ngClass]="{ disabled: isActionInProgress }">
-    <button class="chat-button" (click)="generateMore()">🔮 Generate</button>
-    <button class="chat-button" (click)="clearConversation()">
+    <button
+      class="chat-button chat-button--generate"
+      (click)="generateMore()"
+      [disabled]="!selectedCharacter || isActionInProgress"
+    >
+      🔮 Generate
+    </button>
+    <button
+      class="chat-button chat-button--clear"
+      (click)="clearConversation()"
+    >
       🧹 Clear conversation
     </button>
   </div>

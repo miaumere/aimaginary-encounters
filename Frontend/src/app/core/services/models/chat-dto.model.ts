@@ -12,9 +12,9 @@ export interface IChatDetailsDto {
   name: string;
   additionalContext: string | null;
   character1: ICharacterDto;
-  character2: ICharacterDto | null;
+  character2: ICharacterDto;
   character1Attitude: Attitude;
-  character2Attitude: Attitude | null;
+  character2Attitude: Attitude;
 }
 
 export interface IMessageDto {
@@ -22,4 +22,16 @@ export interface IMessageDto {
   sender: ICharacterWithColorDto;
   content: string;
   sentDate: Date;
+}
+
+export interface IEditMessageRequestDto {
+  content: string;
+  chatId: string;
+  messageId: string;
+}
+
+export interface ICreateMessageRequestDto {
+  content: string;
+  chatId: string;
+  senderId: string;
 }

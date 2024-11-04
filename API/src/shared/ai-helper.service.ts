@@ -5,6 +5,7 @@ import { ChatEntity } from '../entities/chat.entity';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources';
+import { MessageEntity } from 'src/entities/message.entity';
 
 @Injectable()
 export class AiHelperService {
@@ -16,7 +17,8 @@ export class AiHelperService {
 	async getAiResponse(
 		characterEntity: CharacterEntity,
 		chatEntity: ChatEntity,
-		attitude: Attitude
+		attitude: Attitude,
+		last5Messages: MessageEntity[]
 	): Promise<string> {
 		const openai = new OpenAI({
 			apiKey: this.apiKey,
@@ -33,7 +35,6 @@ export class AiHelperService {
 			},
 		];
 
-		const last5Messages = chatEntity.messages.slice(-5);
 		last5Messages.forEach((message) => {
 			messages.push({
 				role: 'user',

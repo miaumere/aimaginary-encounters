@@ -22,18 +22,19 @@
 
 .chat-header {
   display: flex;
-  flex-direction: column;
   align-items: start;
   margin-bottom: 16px;
   background: $white;
+
   &__name {
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 600;
     margin: 0;
     color: $violet;
   }
   &__context {
     color: $grey;
+    font-size: 0.8rem;
   }
 }
 
@@ -51,9 +52,13 @@
   gap: 16px;
   align-items: start;
 
-  &:nth-child(even) {
+  &--received {
     flex-direction: row-reverse;
   }
+
+  // &:nth-child(even) {
+  //   flex-direction: row-reverse;
+  // }
 }
 
 .timestamp {
@@ -65,6 +70,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  &__name {
+    font-size: 12px;
+  }
 }
 
 .chat-message-content {
@@ -77,6 +86,14 @@
   gap: 8px;
   color: $white;
   align-items: start;
+  font-size: 12px !important;
+  max-width: 450px;
+  width: 100%;
+
+  &--edit {
+    resize: vertical;
+    min-height: 80px;
+  }
 }
 
 .chat-options {
@@ -95,5 +112,91 @@
   &:hover {
     background: $violet;
     color: $white;
+  }
+
+  &--send-msg {
+    background: $orange;
+    color: $white;
+    width: fit-content;
+    align-self: flex-end;
+  }
+
+  &--generate {
+    color: $white;
+    background: $cyan;
+    &:hover {
+      background: $violet;
+    }
+  }
+
+  &--clear {
+    color: $white;
+    background: $rose;
+  }
+}
+.participants {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100px;
+  gap: 4px;
+  align-items: baseline;
+}
+
+.new-message-input {
+  resize: vertical;
+  max-height: 150px;
+  min-height: 100px;
+  width: 100%;
+}
+
+.chat-participant {
+  margin: 4px;
+  cursor: pointer;
+  transition: 0.3s transform;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &--selected {
+    border: 2px dashed $black;
+  }
+}
+
+.write-as {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+
+  &__chars-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+  }
+  &__text {
+    font-size: 12px;
+    color: $grey;
+  }
+}
+
+.textarea-container {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.send-message-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+}
+
+.chat-message-options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  &__option {
+    font-size: 12px;
   }
 }

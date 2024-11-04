@@ -1,11 +1,16 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   IChatDetailsDto,
+  ICreateMessageRequestDto,
+  IEditMessageRequestDto,
   IMessageDto,
 } from '../../../../../../core/services/models/chat-dto.model';
 import { ChatService } from '../../../../../../core/services/chat.service';
 import { ActivatedRoute } from '@angular/router';
 import { BaseComponent } from '../../../../../../core/base.component';
+import { ICharacterDto } from '../../../../../../core/services/models/character-dto.model';
+import { FormControl, Validators } from '@angular/forms';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -23,6 +28,15 @@ export class ChatComponent extends BaseComponent implements OnInit {
 
   isActionInProgress = false;
 
+  selectedCharacter: ICharacterDto | null = null;
+
+  messageFormControl = new FormControl('', [
+    Validators.minLength(1),
+    Validators.maxLength(250),
+  ]);
+
+  messageInEditMode: IMessageDto | null = null;
+
   constructor(
     private _chatService: ChatService,
     private _route: ActivatedRoute
@@ -38,20 +52,20 @@ export class ChatComponent extends BaseComponent implements OnInit {
       })
     );
     this._getChatMessages();
+    this.messageFormControl.disable();
   }
 
   private _getChatMessages() {
     this.subscriptions$.add(
       this._chatService.getChatMessages(this.chatId).subscribe((messages) => {
         this.messages = messages;
-        this.isActionInProgress = false;
         this._scrollToDivBottom();
       })
     );
   }
 
   private _scrollToDivBottom() {
-    const element = this.chatBox.nativeElement;
+    const element = this.chatBox?.nativeElement;
 
     setTimeout(() => {
       element!.scrollTop = element!.scrollHeight;
@@ -63,12 +77,17 @@ export class ChatComponent extends BaseComponent implements OnInit {
   }
 
   generateMore() {
+    if (this.selectedCharacter == null) return;
+
     this.isActionInProgress = true;
     this.subscriptions$.add(
-      this._chatService.generateMessages(this.chatId).subscribe(() => {
-        this._getChatMessages();
-        this._playSound();
-      })
+      this._chatService
+        .generateMessages(this.chatId, this.selectedCharacter.id)
+        .pipe(finalize(() => (this.isActionInProgress = false)))
+        .subscribe(() => {
+          this._getChatMessages();
+          this._playSound();
+        })
     );
   }
 
@@ -77,10 +96,85 @@ export class ChatComponent extends BaseComponent implements OnInit {
 
     this.isActionInProgress = true;
     this.subscriptions$.add(
-      this._chatService.clearChatMessages(this.chatId).subscribe(() => {
-        this.messages = [];
-        this.isActionInProgress = false;
-      })
+      this._chatService
+        .clearChatMessages(this.chatId)
+        .pipe(finalize(() => (this.isActionInProgress = false)))
+        .subscribe(() => {
+          this.messages = [];
+        })
     );
+  }
+
+  sendMessage() {
+    this.isActionInProgress = true;
+    if (
+      this.messageFormControl.invalid ||
+      !this.messageFormControl.value ||
+      !this.selectedCharacter
+    ) {
+      return;
+    }
+
+    const request: ICreateMessageRequestDto = {
+      chatId: this.chatId,
+      senderId: this.selectedCharacter.id,
+      content: this.messageFormControl.value,
+    };
+
+    this.subscriptions$.add(
+      this._chatService
+        .sendMessage(request)
+        .pipe(finalize(() => (this.isActionInProgress = false)))
+        .subscribe(() => {
+          this._getChatMessages();
+          this._playSound();
+          this.messageFormControl.reset();
+        })
+    );
+  }
+
+  deleteMessage(messageId: string) {
+    if (!confirm('Are you sure you want to delete the message?')) return;
+
+    this.isActionInProgress = true;
+
+    this.subscriptions$.add(
+      this._chatService
+        .deleteChatMessage(this.chatId, messageId)
+        .pipe(finalize(() => (this.isActionInProgress = false)))
+        .subscribe(() => {
+          this._getChatMessages();
+        })
+    );
+  }
+  toggleEditModeForMessage(message: IMessageDto | null) {
+    this.messageInEditMode = message;
+  }
+
+  updateMessage() {
+    if (!this.messageInEditMode) return;
+
+    this.isActionInProgress = true;
+
+    const request: IEditMessageRequestDto = {
+      chatId: this.chatId,
+      messageId: this.messageInEditMode.id,
+      content: this.messageInEditMode.content,
+    };
+
+    this.subscriptions$.add(
+      this._chatService
+        .editChatMessage(request)
+        .pipe(finalize(() => (this.isActionInProgress = false)))
+        .subscribe(() => {
+          this._getChatMessages();
+          this.messageInEditMode = null;
+        })
+    );
+  }
+
+  selectCharacter(character: ICharacterDto) {
+    this.selectedCharacter = character;
+    this.messageFormControl.enable();
   }
 }

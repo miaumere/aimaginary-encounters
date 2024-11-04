@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 import {
   IChatDetailsDto,
   IChatDto,
+  ICreateMessageRequestDto,
+  IEditMessageRequestDto,
   IMessageDto,
 } from './models/chat-dto.model';
 import { IChatRequestDto } from './models/chat-request.model';
@@ -36,14 +38,32 @@ export class ChatService {
     return this.http.get<IMessageDto[]>(`${this._baseUrl}/messages/${id}`);
   }
 
-  generateMessages(chatId: string) {
+  generateMessages(chatId: string, characterId: string) {
     return this.http.post<IMessageDto[]>(
-      `${this._baseUrl}/messages/${chatId}`,
+      `${this._baseUrl}/messages/${chatId}/${characterId}`,
       {}
     );
   }
 
   clearChatMessages(chatId: string) {
     return this.http.delete(`${this._baseUrl}/messages/${chatId}`);
+  }
+
+  deleteChatMessage(chatId: string, messageId: string) {
+    return this.http.delete(`${this._baseUrl}/messages/${chatId}/${messageId}`);
+  }
+
+  editChatMessage(request: IEditMessageRequestDto) {
+    return this.http.patch<IMessageDto>(
+      `${this._baseUrl}/edit-message`,
+      request
+    );
+  }
+
+  sendMessage(request: ICreateMessageRequestDto) {
+    return this.http.post<IMessageDto>(
+      `${this._baseUrl}/create-new-message`,
+      request
+    );
   }
 }

@@ -4,7 +4,12 @@ import { CharacterEntity } from '../entities/character.entity';
 import { ChatEntity } from '../entities/chat.entity';
 import { MessageEntity } from '../entities/message.entity';
 import { Attitude } from '../enums/attitude.enum';
-import { IChatDetailsDto, IChatDto } from '../models/chat-dto.model';
+import {
+	IChatDetailsDto,
+	IChatDto,
+	ICreateMessageRequestDto,
+	IEditMessageRequestDto,
+} from '../models/chat-dto.model';
 import { IChatRequestDto } from '../models/chat-request.model';
 import { AiHelperService } from '../shared/ai-helper.service';
 import { Repository } from 'typeorm';
@@ -191,7 +196,7 @@ export class ChatService {
 		return result;
 	}
 
-	async generateMessages(chatId: string) {
+	async generateMessages(chatId: string, characterId: string) {
 		const chat = await this._chatRepository.findOne({
 			relations: [
 				'messages',
@@ -204,25 +209,38 @@ export class ChatService {
 			},
 		});
 
-		const lastMessage = chat?.messages[chat.messages.length - 1];
-
 		if (!chat) {
 			throw new Error('Chat not found');
 		}
 
 		const message = new MessageEntity();
 
-		const character =
-			lastMessage?.author.id === chat.character1.id
-				? chat.character2
-				: chat.character1;
+		const character = await this._charactersRepository.findOneBy({
+			id: characterId,
+		});
+		if (!character) {
+			throw new Error('Character not found');
+		}
+
+		const last5Messages = await this._messagesRepository.find({
+			where: {
+				chat: chat,
+			},
+			order: {
+				sentDate: 'DESC',
+			},
+			take: 5,
+		});
+
+		last5Messages.reverse();
 
 		message.content = await this._aiHelperService.getAiResponse(
 			character,
 			chat,
 			chat.character1.id
 				? chat.character2Attitude
-				: chat.character1Attitude
+				: chat.character1Attitude,
+			last5Messages
 		);
 
 		message.sentDate = new Date();
@@ -253,5 +271,75 @@ export class ChatService {
 		await this._messagesRepository.remove(chat.messages);
 		chat.messages = [];
 		await this._chatRepository.save(chat);
+	}
+
+	async deleteChatMessage(chatId: string, messageId: string) {
+		const message = await this._messagesRepository.findOne({
+			relations: ['chat', 'chat.createdBy'],
+			where: {
+				id: messageId,
+				chat: {
+					id: chatId,
+					createdBy: this._userService.currentUser$.getValue(),
+				},
+			},
+		});
+		if (!message) {
+			throw new Error('Message not found');
+		}
+
+		const chat = await this._chatRepository.findOne({
+			relations: ['messages'],
+			where: {
+				id: chatId,
+			},
+		});
+
+		chat.messages = chat.messages.filter((m) => m.id !== message.id);
+
+		await this._messagesRepository.remove(message);
+		await this._chatRepository.save(chat);
+	}
+
+	async editChatMessage(request: IEditMessageRequestDto) {
+		const message = await this._messagesRepository.findOne({
+			relations: ['chat', 'chat.createdBy'],
+			where: {
+				id: request.messageId,
+				chat: {
+					id: request.chatId,
+					createdBy: this._userService.currentUser$.getValue(),
+				},
+			},
+		});
+		if (!message) {
+			throw new Error('Message not found');
+		}
+		message.content = request.content;
+		await this._messagesRepository.save(message);
+	}
+
+	async sendMessage(request: ICreateMessageRequestDto) {
+		const message = new MessageEntity();
+
+		message.author = await this._charactersRepository.findOneBy({
+			id: request.senderId,
+		});
+
+		if (!message.author) {
+			throw new Error('Character not found');
+		}
+		message.chat = await this._chatRepository.findOneBy({
+			id: request.chatId,
+		});
+		if (!message.chat) {
+			throw new Error('Chat not found');
+		}
+		message.content = request.content;
+		message.sentDate = new Date();
+
+		await this._messagesRepository.save(message);
+
+		return;
 	}
 }
